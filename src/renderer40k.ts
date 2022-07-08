@@ -102,7 +102,7 @@ export class Renderer40k implements Renderer {
             thead.appendChild(tr);
             const headerInfo = [{ name: "NAME", w: '20%' }, { name: "ROLE", w: '15%' }, { name: "MODELS", w: '55%' }, { name: "POINTS", w: '5%' }, { name: "POWER", w: '5%' }];
             if (unitsHaveCpCost) {
-                headerInfo.push({name: "CP", w: '5%'});
+                headerInfo.push({name: "CP", w: '5%'})
             }
             headerInfo.forEach(element => {
                 let th = document.createElement('th');
@@ -333,6 +333,8 @@ export class Renderer40k implements Renderer {
 
                 this.renderUnitHtml(forces, unit);
             }
+            this.addUnitTableToggleAction();
+            this.toggleUnitTables();
 
             if (force._rules.size > 0) {
                 let rules = new Map<string, string|null>();
@@ -613,6 +615,18 @@ export class Renderer40k implements Renderer {
         }
     }
 
+    private addUnitTableToggleAction() {
+        $(".unit_header").on("click", (e) => {
+            toggleUnitTable($(e.target));
+        });
+    }
+
+    private toggleUnitTables() {
+        $(".unit_header").each((i, elem) => {
+            toggleUnitTable($(elem));
+        });
+    }
+
     private static _unitLabels = ["MODEL", "M", "WS", "BS", "S", "T", "W", "A", "LD", "SAVE"];
     private _unitLabelWidthsNormalized = [0.25, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05];
     private static _weaponLabels = ["WEAPONS", "RANGE", "TYPE", "S", "AP", "D", "ABILITIES"];
@@ -687,4 +701,7 @@ function createNotesHead(title: string, notes: BaseNotes[]) {
     return thead;
 }
 
-
+function toggleUnitTable(header: JQuery) {
+    let table = header.closest("table");
+    table.children().slice(1).toggle();
+}
